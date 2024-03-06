@@ -1,0 +1,187 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+public class FileEncryptorDecryptorGUI extends JFrame {
+
+    private JTextArea textArea;
+    private JTextField keyField;
+
+    public FileEncryptorDecryptorGUI() {
+        super("File Encryptor/Decryptor");
+
+        textArea = new JTextArea(15, 40);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        keyField = new JTextField(5);
+
+        JButton encryptButton = new JButton("Encrypt");
+        encryptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                encryptFile();
+            }
+        });
+
+        JButton decryptButton = new JButton("Decrypt");
+        decryptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                decryptFile();
+            }
+        });
+
+        JButton loadButton = new JButton("Load File");
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadFile();
+            }
+        });
+
+        JButton saveButton = new JButton("Save File");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveFile();
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Encryption Key: "));
+        panel.add(keyField);
+        panel.add(encryptButton);
+        panel.add(decryptButton);
+        panel.add(loadButton);
+        panel.add(saveButton);
+
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+        contentPane.add(panel, BorderLayout.SOUTH);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void encryptFile() {
+        String keyStr = keyField.getText();
+        if (keyStr.isEmpty()) {
+            showMessage("Please enter a key for encryption.");
+            return;
+        }
+
+        int key = Integer.parseInt(keyStr);
+
+        try {
+            String plainText = textArea.getText();
+            String encryptedText = encrypt(plainText, key);
+            textArea.setText(encryptedText);
+            showMessage("Encryption successful!");
+        } catch (Exception e) {
+            showMessage("Error during encryption: " + e.getMessage());
+        }
+    }
+
+    private void decryptFile() {
+        String keyStr = keyField.getText();
+        if (keyStr.isEmpty()) {
+            showMessage("Please enter a key for decryption.");
+            return;
+        }
+
+        int key = Integer.parseInt(keyStr);
+
+        try {
+            String encryptedText = textArea.getText();
+            String decryptedText = decrypt(encryptedText, key);
+            textArea.setText(decryptedText);
+            showMessage("Decryption successful!");
+        } catch (Exception e) {
+            showMessage("Error during decryption: " + e.getMessage());
+        }
+    }
+
+    private void loadFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                textArea.setText(content.toString());
+                showMessage("File loaded successfully!");
+            } catch (IOException e) {
+                showMessage("Error loading file: " + e.getMessage());
+            }
+        }
+    }
+
+    private void saveFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        int result = fileChooser.showSaveDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile))) {
+                writer.write(textArea.getText());
+                showMessage("File saved successfully!");
+            } catch (IOException e) {
+                showMessage("Error saving file: " + e.getMessage());
+            }
+        }
+    }
+
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    private String encrypt(String text, int key) {
+        StringBuilder result = new StringBuilder();
+        for (char ch : text.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                char encryptedChar = (char) (((ch - 'A' + key) % 26) + 'A');
+                result.append(encryptedChar);
+            } else {
+                result.append(ch);
+            }
+        }
+        return result.toString();
+    }
+
+    private String decrypt(String text, int key) {
+        StringBuilder result = new StringBuilder();
+        for (char ch : text.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                char decryptedChar = (char) (((ch - 'A' - key + 26) % 26) + 'A');
+                result.append(decryptedChar);
+            } else {
+                result.append(ch);
+            }
+        }
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new FileEncryptorDecryptorGUI();
+            }
+        });
+    }
+}
