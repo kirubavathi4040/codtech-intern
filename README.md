@@ -61,7 +61,7 @@ Enter first number: 8
 Enter second number: 3
 Result: 5.0
 
-------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Student Grade Management System Documentation
 -----------------------------------------------
@@ -142,6 +142,69 @@ Roll Number: 101
 Subject Marks: [85.0, 90.0, 78.0]
 Overall Percentage: 84.33333333333333
 Grade: B
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+File Encryptor/Decryptor with GUI Documentation
+------------------------------------------------
+Overview:
+The File Encryptor/Decryptor is a Java program with a graphical user interface (GUI) designed to encrypt and decrypt the contents of a text file using a simple Caesar cipher. Users can input the encryption/decryption key, load and save files, and perform encryption and decryption operations.
+
+Features:
+Caesar Cipher Encryption/Decryption:
+
+Uses a basic Caesar cipher to shift letters in the alphabet based on the specified key.
+Handles both encryption and decryption of the text file content.
+Graphical User Interface (GUI):
+
+Utilizes Java Swing to create an interactive GUI.
+Allows users to input the encryption/decryption key, load and save text files, and perform encryption and decryption operations.
+File Handling:
+
+Users can load the content of a text file into the application.
+The program supports saving the modified content back to a text file.
+Usage:
+GUI Interface:
+
+The application provides a simple and intuitive graphical user interface.
+Users can input the encryption/decryption key, load and save text files, and perform operations using buttons.
+Encryption/Decryption:
+
+Enter a numeric key in the "Encryption Key" field.
+Use the "Encrypt" and "Decrypt" buttons to perform the respective operations on the loaded text.
+Load and Save Files:
+
+Click the "Load File" button to choose and load a text file into the application.
+Click the "Save File" button to save the modified text back to a text file.
+Bonus Features:
+Integration of GUI:
+
+The application integrates Java Swing for a graphical user interface.
+Provides a more user-friendly experience compared to a console-based application.
+Error Handling:
+
+Basic error handling is implemented for file operations and key input.
+Users are prompted with error messages for invalid operations or inputs.
+Example Usage:
+Encrypting Text:
+
+Enter a numeric key in the "Encryption Key" field.
+Click the "Encrypt" button to perform encryption on the loaded text.
+Save the modified content using the "Save File" button.
+Decrypting Text:
+
+Enter the same numeric key used for encryption in the "Encryption Key" field.
+Click the "Decrypt" button to reverse the encryption on the loaded text.
+Save the modified content using the "Save File" button.
+Load and Save Files:
+
+Click the "Load File" button to choose and load a text file.
+Make sure to save the modified content using the "Save File" button.
+
+
+
+
+
+
 
 
 
