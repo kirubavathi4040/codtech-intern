@@ -1,0 +1,193 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    private String name;
+    private int rollNumber;
+    private double[] subjectMarks;
+
+    // Constructor
+    public Student(String name, int rollNumber, double[] subjectMarks) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.subjectMarks = subjectMarks;
+    }
+
+    // Getter methods
+    public String getName() {
+        return name;
+    }
+
+    public int getRollNumber() {
+        return rollNumber;
+    }
+
+    public double[] getSubjectMarks() {
+        return subjectMarks;
+    }
+
+    // Method to calculate overall percentage
+    public double calculatePercentage() {
+        double totalMarks = 0;
+        for (double mark : subjectMarks) {
+            totalMarks += mark;
+        }
+        return totalMarks / subjectMarks.length;
+    }
+
+    // Method to calculate grade based on pre-defined criteria
+    public char calculateGrade() {
+        double percentage = calculatePercentage();
+
+        if (percentage >= 90) {
+            return 'A';
+        } else if (percentage >= 80) {
+            return 'B';
+        } else if (percentage >= 70) {
+            return 'C';
+        } else if (percentage >= 60) {
+            return 'D';
+        } else {
+            return 'F';
+        }
+    }
+}
+
+public class GradeManagementSystem {
+    private static ArrayList<Student> students = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            System.out.println("Student Grade Management System");
+            System.out.println("1. Add Student");
+            System.out.println("2. Update Student");
+            System.out.println("3. Delete Student");
+            System.out.println("4. Display Student Information");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice (1-5): ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    addStudent();
+                    break;
+                case 2:
+                    updateStudent();
+                    break;
+                case 3:
+                    deleteStudent();
+                    break;
+                case 4:
+                    displayStudentInformation();
+                    break;
+                case 5:
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 5.");
+            }
+        } while (choice != 5);
+
+        scanner.close();
+    }
+
+    private static void addStudent() {
+        System.out.print("Enter student name: ");
+        String name = scanner.next();
+
+        System.out.print("Enter roll number: ");
+        int rollNumber = scanner.nextInt();
+
+        System.out.print("Enter the number of subjects: ");
+        int numSubjects = scanner.nextInt();
+
+        double[] subjectMarks = new double[numSubjects];
+        for (int i = 0; i < numSubjects; i++) {
+            System.out.print("Enter marks for subject " + (i + 1) + ": ");
+            subjectMarks[i] = scanner.nextDouble();
+        }
+
+        Student newStudent = new Student(name, rollNumber, subjectMarks);
+        students.add(newStudent);
+
+        System.out.println("Student added successfully!");
+    }
+
+    private static void updateStudent() {
+        System.out.print("Enter the roll number of the student to update: ");
+        int rollNumber = scanner.nextInt();
+
+        boolean found = false;
+        for (Student student : students) {
+            if (student.getRollNumber() == rollNumber) {
+                System.out.print("Enter new marks for each subject: ");
+                double[] newSubjectMarks = new double[student.getSubjectMarks().length];
+                for (int i = 0; i < newSubjectMarks.length; i++) {
+                    newSubjectMarks[i] = scanner.nextDouble();
+                }
+
+                student = new Student(student.getName(), student.getRollNumber(), newSubjectMarks);
+                System.out.println("Student information updated successfully!");
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Student not found with the given roll number.");
+        }
+    }
+
+    private static void deleteStudent() {
+        System.out.print("Enter the roll number of the student to delete: ");
+        int rollNumber = scanner.nextInt();
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getRollNumber() == rollNumber) {
+                students.remove(i);
+                System.out.println("Student deleted successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Student not found with the given roll number.");
+    }
+
+    private static void displayStudentInformation() {
+        System.out.print("Enter the roll number of the student to display information: ");
+        int rollNumber = scanner.nextInt();
+
+        boolean found = false;
+        for (Student student : students) {
+            if (student.getRollNumber() == rollNumber) {
+                System.out.println("Student Information:");
+                System.out.println("Name: " + student.getName());
+                System.out.println("Roll Number: " + student.getRollNumber());
+                System.out.println("Subject Marks: " + arrayToString(student.getSubjectMarks()));
+                System.out.println("Overall Percentage: " + student.calculatePercentage());
+                System.out.println("Grade: " + student.calculateGrade());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Student not found with the given roll number.");
+        }
+    }
+
+    private static String arrayToString(double[] array) {
+        StringBuilder result = new StringBuilder("[");
+        for (int i = 0; i < array.length; i++) {
+            result.append(array[i]);
+            if (i < array.length - 1) {
+                result.append(", ");
+            }
+        }
+        result.append("]");
+        return result.toString();
+    }
+}
